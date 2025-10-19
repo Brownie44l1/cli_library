@@ -1,0 +1,30 @@
+{
+  "1001": {
+    "isbn": "1001",
+    "title": "Habits",
+    "author": "James",
+    "year": "2020",
+    "available": true
+  },
+  "1002": {
+    "isbn": "1002",
+    "title": "Atomic",
+    "author": "Clear",
+    "year": "2019",
+    "available": true
+  },
+  "1003": {
+    "isbn": "1003",
+    "title": "Meaning",
+    "author": "Viktor",
+    "year": "1945",
+    "available": true
+  },
+  "1004": {
+    "isbn": "1004",
+    "title": "Stoic",
+    "author": "Socratic",
+    "year": "1944",
+    "available": false
+  }
+}

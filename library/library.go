@@ -61,8 +61,12 @@ func (l *Library) ListBooks() {
 
 func (l *Library) BorrowBook(isbn string) {
 	if book, ok := l.Books[isbn]; ok {
-		book.Available = false
-		fmt.Println("Book borrowed: ", book.Title)
+		if !book.Available {
+			fmt.Println("Book has been borrowed, check back")
+		} else {
+			book.Available = false
+			fmt.Println("Book borrowed: ", book.Title)
+		}
 	} else {
 		fmt.Println("Book does not exist")
 	}
@@ -70,8 +74,12 @@ func (l *Library) BorrowBook(isbn string) {
 
 func (l *Library) ReturnBook(isbn string) {
 	if book, ok := l.Books[isbn]; ok {
-		book.Available = true
-		fmt.Println("Book borrowed: ", book.Title)
+		if book.Available{
+			fmt.Println("Book not borrowed can't be returned")
+		} else {
+			book.Available = true
+			fmt.Println("Book Returned: ", book.Title)
+		}
 	} else {
 		fmt.Println("Book does not exist")
 	}

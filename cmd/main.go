@@ -48,8 +48,30 @@ func main() {
 		case "list":
 			lib.ListBooks()
 
+		case "display":
+			if len(parts) < 2 {
+				fmt.Println("Usage: display {isbn}")
+				continue
+			}
+			lib.DisplayBook(parts[1])
+
+		case "borrow":
+			lib.BorrowBook(parts[1])
+
+		case "return":
+			lib.ReturnBook(parts[1])
+
 		case "save":
-			lib.SaveToFile("library.json")
+			err := lib.SaveToFile("library.json")
+			if err != nil {
+				fmt.Println("Error: ", err)
+			}
+		
+		case "load":
+			err := lib.LoadFromFile("library.json")
+			if err != nil {
+				fmt.Println("Error: ", err)
+			}
 
 		case "quit":
 			lib.SaveToFile("library.json")
