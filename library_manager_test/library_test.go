@@ -9,8 +9,7 @@ import (
 
 // helper to create a fresh library for each test
 func setupLibrary() *library.Library {
-	lib := library.NewLibrary()
-	return lib
+	return library.NewLibrary()
 }
 
 func TestAddBook(t *testing.T) {
@@ -41,34 +40,36 @@ func TestUpdateBook(t *testing.T) {
 	if book.Year != "2024" {
 		t.Fatalf("expected year '2024', got %s", book.Year)
 	}
+	if !book.Available {
+		t.Fatalf("expected book to be available after update")
+	}
 }
 
 func TestBorrowAndReturn(t *testing.T) {
 	lib := setupLibrary()
 	lib.AddBook("1001", "Go Deep Dive", "Alice", "2021")
 
-	book := lib.Books["1001"]
-
-	// Borrow
-	book.Available = false
-	if book.Available {
+	// Borrow the book
+	lib.BorrowBook("1001")
+	if lib.Books["1001"].Available {
 		t.Fatalf("expected Available=false after borrow")
 	}
 
-	// Return
-	book.Available = true
-	if !book.Available {
+	// Return the book
+	lib.ReturnBook("1001")
+	if !lib.Books["1001"].Available {
 		t.Fatalf("expected Available=true after return")
 	}
 }
 
 func TestSaveAndLoad(t *testing.T) {
 	filename := "test_library.json"
-	_ = os.Remove(filename)         // ensure clean
-	defer os.Remove(filename)       // cleanup after test
+	_ = os.Remove(filename)   // ensure clean
+	defer os.Remove(filename) // cleanup after test
 
 	lib := setupLibrary()
 	lib.AddBook("1001", "Go Persistence", "Tester", "2023")
+
 	// Save
 	if err := lib.SaveToFile(filename); err != nil {
 		t.Fatalf("SaveToFile failed: %v", err)

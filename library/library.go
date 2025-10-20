@@ -21,7 +21,7 @@ func (l *Library) AddBook(isbn, title, author, year string) {
 func (l *Library) UpdateBook(isbn, title, author, year, availableStr string) error {
 	book, ok := l.Books[isbn]
 	if !ok {
-		return fmt.Errorf("Book not found for ISBN: %s", book.ISBN)
+		return fmt.Errorf("Book not found for ISBN: %s", isbn)
 	}
 	Available, err := strconv.ParseBool(availableStr)
 	if err != nil {
