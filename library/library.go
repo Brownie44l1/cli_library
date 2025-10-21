@@ -139,13 +139,20 @@ func (l *Library) ReturnBook(isbn string) error {
 	return nil
 }
 
-func (l *Library) SearchBooks(author string) error {
-	book, err := l.store.Search(author)
-	if err != nil {
-		fmt.Printf("Author %s not found\n", author)
-		return err
-	} else {
-		fmt.Printf("- %s by %s (%s) [Available: %t]\n", book.Title, book.Author, book.Year, book.Available)
-	}
-	return nil
+func (l *Library) SearchBooks(query string) error {
+    books, err := l.store.Search(query)
+    if err != nil {
+        return err
+    }
+
+    if len(books) == 0 {
+        fmt.Printf("No books found matching '%s'\n", query)
+        return nil
+    }
+
+    fmt.Printf("Found %d book(s):\n", len(books))
+    for _, book := range books {
+        fmt.Printf("- %s by %s (%s) [Available: %t]\n", book.Title, book.Author, book.Year, book.Available)
+    }
+    return nil
 }

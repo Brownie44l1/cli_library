@@ -8,7 +8,7 @@ type BookStore interface {
     Delete(isbn string) error
 	Borrow(isbn string) error
     Return(isbn string) error
-	Search(author string) (*Book, error)
+	Search(query string) ([]Book, error)
 }
 
 
