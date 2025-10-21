@@ -1,12 +1,17 @@
 package library
 
-import (
-	"encoding/json"
-	"fmt"
-	"os"
-)
+type BookStore interface {
+    Add(book Book) error
+	Update(book Book) error
+	List() ([]Book, error)
+    Get(isbn string) (*Book, error)
+    Delete(isbn string) error
+	Borrow(isbn string) error
+    Return(isbn string) error
+}
 
-func (l *Library) SaveToFile(filename string) error {
+
+/* func (l *Library) SaveToFile(filename string) error {
 	data, err := json.MarshalIndent(l.Books, "", "  ")
 	if err != nil {
 		return fmt.Errorf("marshal error: %v", err)
@@ -26,4 +31,4 @@ func (l *Library) LoadFromFile(filename string) error {
 	}
 
 	return json.Unmarshal(data, &l.Books)
-}
+} */

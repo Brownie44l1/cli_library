@@ -3,16 +3,21 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
-	"strings"
 
 	"github.com/Brownie44l1/cli_library/library"
+	"github.com/Brownie44l1/cli_library/storage"
+	"github.com/google/shlex"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	lib := library.NewLibrary()
-	lib.LoadFromFile("library.json")
-
+	store, err := storage.NewSQLiteStore("library.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	lib := library.NewLibrary(store)
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -22,8 +27,9 @@ func main() {
 		}
 
 		line := scanner.Text()
-		parts := strings.Fields(line)
-		if len(parts) == 0 {
+		parts, err := shlex.Split(line)
+		if err != nil {
+			fmt.Println("Error parsing command:", err)
 			continue
 		}
 
@@ -48,12 +54,12 @@ func main() {
 		case "list":
 			lib.ListBooks()
 
-		case "display":
+		case "get":
 			if len(parts) < 2 {
-				fmt.Println("Usage: display {isbn}")
+				fmt.Println("Usage: get {isbn}")
 				continue
 			}
-			lib.DisplayBook(parts[1])
+			lib.GetBook(parts[1])
 
 		case "borrow":
 			lib.BorrowBook(parts[1])
@@ -61,20 +67,7 @@ func main() {
 		case "return":
 			lib.ReturnBook(parts[1])
 
-		case "save":
-			err := lib.SaveToFile("library.json")
-			if err != nil {
-				fmt.Println("Error: ", err)
-			}
-		
-		case "load":
-			err := lib.LoadFromFile("library.json")
-			if err != nil {
-				fmt.Println("Error: ", err)
-			}
-
 		case "quit":
-			lib.SaveToFile("library.json")
 			fmt.Println("Goodbye!")
 			return
 
