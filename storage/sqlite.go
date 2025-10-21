@@ -90,3 +90,24 @@ func (s *SQLiteStore) Return(isbn string) error {
 	_, err := s.db.Exec("UPDATE books SET available=1 where isbn=?", isbn)
 	return err
 }
+
+func (s *SQLiteStore) Search(query string) ([]library.Book, error) {
+    rows, err := s.db.Query(
+        "SELECT isbn, title, author, year, available FROM books WHERE LOWER(title) LIKE LOWER(?) OR LOWER(author) LIKE LOWER(?)",
+        "%"+query+"%", "%"+query+"%")
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var books []library.Book
+    for rows.Next() {
+        var book library.Book
+        err := rows.Scan(&book.ISBN, &book.Title, &book.Author, &book.Year, &book.Available)
+        if err != nil {
+            return nil, err
+        }
+        books = append(books, book)
+    }
+    return books, nil
+}

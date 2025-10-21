@@ -14,6 +14,24 @@ func NewLibrary(store BookStore) *Library {
 }
 
 func (l *Library) AddBook(isbn, title, author, year string) error {
+	if len(isbn) == 0 || len(isbn) > 4 {
+		return fmt.Errorf("ISBN must be 1-4 integers")
+	}
+
+	yearInt, err := strconv.Atoi(year)
+	if err != nil || yearInt < 1800 || yearInt > 2025 {
+		return fmt.Errorf("Invalid year: must be between 1800-2025")
+	}
+
+	_, err = l.store.Get(isbn) 
+	if err == nil {
+		return fmt.Errorf("Book with ISBN %s already exists", isbn)
+	}
+
+	if isbn == "" || title == "" || author == "" || year == "" {
+		return fmt.Errorf("All fields (ISBN, Title, Author, Year) are required")
+	}
+
 	book := Book{ISBN: isbn, Title: title, Author: author, Year: year, Available: true}
     return l.store.Add(book)
 }
@@ -118,5 +136,16 @@ func (l *Library) ReturnBook(isbn string) error {
 		return err
 	}
 	fmt.Println("Book returned successfully: ", book.Title)
+	return nil
+}
+
+func (l *Library) SearchBooks(author string) error {
+	book, err := l.store.Search(author)
+	if err != nil {
+		fmt.Printf("Author %s not found\n", author)
+		return err
+	} else {
+		fmt.Printf("- %s by %s (%s) [Available: %t]\n", book.Title, book.Author, book.Year, book.Available)
+	}
 	return nil
 }

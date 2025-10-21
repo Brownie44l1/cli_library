@@ -61,6 +61,13 @@ func main() {
 			}
 			lib.GetBook(parts[1])
 
+		case "search":
+			if len(parts) < 2 {
+				fmt.Println("Usage: search {author}")
+				continue
+			}
+			lib.SearchBooks(parts[1])
+
 		case "borrow":
 			lib.BorrowBook(parts[1])
 
